@@ -81,9 +81,10 @@ public class AntAlgorithm extends Application {
     private Random my_random;
     private Operations Ops;
     private Stage my_stage;
-    private int offset_x = 10, offset_y = 10, graf_space = 45, q_coef = 5000, ant_count = 2, right_width = 450, grid_width, grid_height, screen_width, screen_height;
-    private double evaporation = 12, animation_time, alpha = 1, beta = 2;
+    private int offset_x = 10, offset_y = 10, graf_space = 45, q_coef = 500, ant_count = 100, right_width = 450, grid_width, grid_height, screen_width, screen_height;
+    private double evaporation = 12, animation_time, alpha = 4, beta = 1;
     private int animation_time_coef = 20;
+    private double aux;
 
     @Override
     public void start(Stage primaryStage) {
@@ -177,7 +178,10 @@ public class AntAlgorithm extends Application {
         }
 
         //cambio por tipo
-        if (tipo == 2) {
+        if (tipo == 1) {
+            alpha = aux;
+        } else if (tipo == 2) {
+            aux = alpha;
             alpha++;
         }
         ants_neighbours.clear();
@@ -244,7 +248,7 @@ public class AntAlgorithm extends Application {
         for (int k = 0; k < animations.length; k++) {
             if (((Image_ant) animations[k].getNode()).get_name().equals(my_little_ants[m].get_name())) {
                 anim = k;
-                //System.out.println(animations[k].getNode());
+                System.out.println(animations[k].getNode());
                 break;
             }
         }
@@ -358,7 +362,7 @@ public class AntAlgorithm extends Application {
 
     private VBox prepare_group_q() {
         slider_q_coef = SliderBuilder.create().blockIncrement(1).snapToTicks(true).showTickMarks(false).majorTickUnit(1).value(q_coef / 100).min(0).max(400).build();
-        txt_q_coef = my_builder.build_text("Cantidad de feromonas = " + q_coef);
+        txt_q_coef = my_builder.build_text("Cantidad de feromonas = " + slider_q_coef.getValue());
         slider_q_coef.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -371,7 +375,7 @@ public class AntAlgorithm extends Application {
 
     private VBox prepare_group_ant_count() {
         slider_ant_count = SliderBuilder.create().blockIncrement(1).snapToTicks(true).showTickMarks(false).majorTickUnit(1).value(ant_count).min(1).max(2000).build();
-        txt_ant_count = my_builder.build_text("Cantidad de hormigas = " + ant_count);
+        txt_ant_count = my_builder.build_text("Cantidad de hormigas = " + slider_ant_count.getValue());
         slider_ant_count.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -384,7 +388,7 @@ public class AntAlgorithm extends Application {
 
     private VBox prepare_group_alpha_beta() {
         slider_alpha = SliderBuilder.create().blockIncrement(0.01).snapToTicks(false).showTickMarks(true).majorTickUnit(1).value(alpha).min(0).max(10).build();
-        txt_alpha = my_builder.build_text("Alpha = " + alpha);
+        txt_alpha = my_builder.build_text("Alpha = " + slider_alpha.getValue());
         slider_alpha.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -393,7 +397,7 @@ public class AntAlgorithm extends Application {
             }
         });
         slider_beta = SliderBuilder.create().blockIncrement(0.01).snapToTicks(false).showTickMarks(true).majorTickUnit(1).value(beta).min(-1).max(0).build();
-        txt_beta = my_builder.build_text("Beta = " + beta);
+        txt_beta = my_builder.build_text("Beta = " + slider_beta.getValue());
         slider_beta.valueProperty().addListener(new ChangeListener<Number>() {
             @Override
             public void changed(ObservableValue<? extends Number> observable, Number oldValue, Number newValue) {
@@ -470,13 +474,13 @@ public class AntAlgorithm extends Application {
                 for (int m = 0; m < circle_grid.length; m++) {
                     for (int k = 0; k < circle_grid[m].length; k++) {
                         if (circle_grid[m][k].getFill() == Colors_and_shapes.color_food) {
-//                            circle_grid[m][k].setFill( Colors_and_shapes.color_graf );
-//                            circle_grid[m][k].setRadius( Colors_and_shapes.radius_grid );
+                            circle_grid[m][k].setFill(Colors_and_shapes.color_graf);
+                            circle_grid[m][k].setRadius(Colors_and_shapes.radius_grid);
                         }
                     }
                 }
-                circle_context.setFill(Colors_and_shapes.color_food);
-                circle_context.setRadius(Colors_and_shapes.radius_food);
+                //circle_context.setFill(Colors_and_shapes.color_food);
+                //circle_context.setRadius(Colors_and_shapes.radius_food);
             }
         }).build();
         contex_menu_item_food2 = MenuItemBuilder.create().text("Zona de riesgo Tipo2").onAction(new EventHandler<ActionEvent>() {
@@ -485,13 +489,13 @@ public class AntAlgorithm extends Application {
                 for (int m = 0; m < circle_grid.length; m++) {
                     for (int k = 0; k < circle_grid[m].length; k++) {
                         if (circle_grid[m][k].getFill() == Colors_and_shapes.color_food2) {
-//                            circle_grid[m][k].setFill( Colors_and_shapes.color_graf );
-//                            circle_grid[m][k].setRadius( Colors_and_shapes.radius_grid );
+                            circle_grid[m][k].setFill(Colors_and_shapes.color_graf);
+                            circle_grid[m][k].setRadius(Colors_and_shapes.radius_grid);
                         }
                     }
                 }
-                circle_context.setFill(Colors_and_shapes.color_food2);
-                circle_context.setRadius(Colors_and_shapes.radius_food2);
+                //circle_context.setFill(Colors_and_shapes.color_food);
+                //circle_context.setRadius(Colors_and_shapes.radius_food);
             }
         }).build();
         contex_menu_item_cave = MenuItemBuilder.create().text("Almacén regional").onAction(new EventHandler<ActionEvent>() {
@@ -517,7 +521,7 @@ public class AntAlgorithm extends Application {
                 delete_neighbour(Integer.parseInt(circle_context.getId()));
             }
         }).build();
-        return ContextMenuBuilder.create().items(contex_menu_item_delete_circle, contex_menu_item_food2, contex_menu_item_food, contex_menu_item_cave).build();
+        return ContextMenuBuilder.create().items(contex_menu_item_delete_circle, contex_menu_item_food, contex_menu_item_food2, contex_menu_item_cave).build();
     }
 
     //evento click para dibujar
@@ -672,7 +676,6 @@ public class AntAlgorithm extends Application {
                             break;
                         }
                     }
-
                     if (cave) {
                         break;
                     }
